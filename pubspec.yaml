@@ -1,0 +1,14 @@
+name: polyclip_dart
+description: A Dart port of the polyclip-ts package for polygon clipping operations.
+version: 0.1.0
+homepage: https://github.com/deanpapas/polyclip-dart
+
+environment:
+  sdk: '>=2.12.0 <3.0.0'  # Ensure null-safety is enabled.
+
+dependencies:
+  decimal: ^2.0.1
+
+dev_dependencies:
+  test: ^1.24.3
+  
