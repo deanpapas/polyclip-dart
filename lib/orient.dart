@@ -36,8 +36,6 @@ CollinearityTest createCollinearityChecker([double? eps]) {
     final ax = a.x, ay = a.y;
     final cx = c.x, cy = c.y;
 
-    // area2 is twice the signed area of triangle (a, b, c).
-    // area2 < 0 => clockwise turn; area2 > 0 => counter-clockwise; area2 = 0 => collinear.
     final area2 = (ay - cy) * (b.x - cx) - (ax - cx) * (b.y - cy);
 
     if (almostCollinear(area2.toDouble(), ax.toDouble(), ay.toDouble(), cx.toDouble(), cy.toDouble())) {
