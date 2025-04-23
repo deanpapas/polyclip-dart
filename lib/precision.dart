@@ -5,13 +5,13 @@ import 'snap.dart';
 /// Configuration object that holds precision-related functions for geometric operations.
 class PrecisionConfig {
   /// Function to compare Decimal values with a specified epsilon.
-  final dynamic compare;
+  final CompareDecimals compare;
   
   /// Function to snap Vector coordinates with a specified epsilon.
-  final dynamic snap;
+  final Snap snap;
   
   /// Function to test collinearity of points with a specified epsilon.
-  final dynamic orient;
+  final CollinearityTest orient;
   
   /// Function to recreate this precision configuration with the current epsilon.
   final PrecisionConfig Function() reset;

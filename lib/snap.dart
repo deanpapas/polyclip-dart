@@ -4,6 +4,8 @@ import 'vector.dart';
 import 'compare.dart';
 import 'identity.dart';
 
+typedef Snap = Vector Function(Vector v);
+
 /// Creates a snap function that optionally snaps vector coordinates to a grid.
 /// 
 /// If [eps] is provided, coordinates that are close to each other (within [eps])
@@ -11,10 +13,10 @@ import 'identity.dart';
 /// If [eps] is null, the identity function is returned, which doesn't modify vectors.
 /// 
 /// Returns a function that takes a Vector and returns a potentially snapped Vector.
-Function snap({double? eps}) {
+Snap snap({double? eps}) {
   if (eps != null) {
     // Cast the comparison function to the correct type
-    final comparer = compareWithEpsilon(eps) as int Function(Decimal, Decimal);
+    final comparer = compareWithEpsilon(eps);
     final xTree = SplayTreeSet<Decimal>(comparer);
     final yTree = SplayTreeSet<Decimal>(comparer);
     

@@ -1,4 +1,4 @@
-Function() constant<T>(T x) {
+T Function() constant<T>(T x) {
   return () {
     return x;
   };
