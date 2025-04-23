@@ -1,16 +1,24 @@
 import 'vector.dart';
+import 'package:geotypes/geotypes.dart';
+import 'package:decimal/decimal.dart';
 
 /// A bounding box has the format:
 ///   { ll: Vector(x: xmin, y: ymin), ur: Vector(x: xmax, y: ymax) }
-class Bbox {
-  final Vector ll;
-  final Vector ur;
+class PolyclipBBox extends BBox {
+  Vector get ll => Vector(x: Decimal.parse(lat1.toString()), y: Decimal.parse(lng1.toString()));
+  Vector get ur => Vector(x: Decimal.parse(lat2.toString()), y: Decimal.parse(lng2.toString()));
 
-  const Bbox({required this.ll, required this.ur});
+  PolyclipBBox({required Vector ll, required Vector ur})
+      : super(
+          ll.y.toDouble(),
+          ll.x.toDouble(),
+          ur.y.toDouble(),
+          ur.x.toDouble(),
+        );
 }
 
 /// Checks if [point] lies within the [bbox].
-bool isInBbox(Bbox bbox, Vector point) {
+bool isInBbox(PolyclipBBox bbox, Vector point) {
   return (bbox.ll.x <= point.x &&
           point.x <= bbox.ur.x &&
           bbox.ll.y <= point.y &&
@@ -19,7 +27,7 @@ bool isInBbox(Bbox bbox, Vector point) {
 
 /// Returns either null, or the overlapping [Bbox] of [b1] and [b2].
 /// If there is only one point of overlap, a Bbox with identical points is returned.
-Bbox? getBboxOverlap(Bbox b1, Bbox b2) {
+PolyclipBBox? getBboxOverlap(PolyclipBBox b1, PolyclipBBox b2) {
   // Check if the two bounding boxes fail to overlap
   if (b2.ur.x < b1.ll.x ||
       b1.ur.x < b2.ll.x ||
@@ -37,7 +45,7 @@ Bbox? getBboxOverlap(Bbox b1, Bbox b2) {
   final upperY = (b1.ur.y < b2.ur.y) ? b1.ur.y : b2.ur.y;
 
   // Construct the overlap bounding box
-  return Bbox(
+  return PolyclipBBox(
     ll: Vector(x: lowerX, y: lowerY),
     ur: Vector(x: upperX, y: upperY),
   );

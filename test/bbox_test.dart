@@ -4,7 +4,7 @@ import 'package:polyclip_dart/polyclip.dart';
 
 /// Helper function to compare two Bbox objects or check both are null.
 /// If they're not null, it compares each field.
-void expectBboxEquals(Bbox? actual, Bbox? expected, {String? reason}) {
+void expectBboxEquals(PolyclipBBox? actual, PolyclipBBox? expected, {String? reason}) {
   if (actual == null && expected == null) {
     // both null is considered "equal"
     return;
@@ -27,7 +27,7 @@ void main() {
   group('Bbox Tests', () {
     group('isInBbox', () {
       test('outside', () {
-        final bbox = Bbox(
+        final bbox = PolyclipBBox(
           ll: Vector(x: Decimal.fromInt(1), y: Decimal.fromInt(2)),
           ur: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(6)),
         );
@@ -67,7 +67,7 @@ void main() {
       });
 
       test('inside', () {
-        final bbox = Bbox(
+        final bbox = PolyclipBBox(
           ll: Vector(x: Decimal.fromInt(1), y: Decimal.fromInt(2)),
           ur: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(6)),
         );
@@ -118,7 +118,7 @@ void main() {
         // Approximation of Number.EPSILON
         final decimalEpsilon = Decimal.parse('2.220446049250313e-16');
 
-        final bbox = Bbox(
+        final bbox = PolyclipBBox(
           ll: Vector(x: Decimal.fromInt(1), y: Decimal.parse('0.8')),
           ur: Vector(x: Decimal.parse('1.2'), y: Decimal.fromInt(6)),
         );
@@ -178,14 +178,14 @@ void main() {
     });
 
     group('getBboxOverlap', () {
-      final b1 = Bbox(
+      final b1 = PolyclipBBox(
         ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(4)),
         ur: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(6)),
       );
 
       group('disjoint - none', () {
         test('above', () {
-          final b2 = Bbox(
+          final b2 = PolyclipBBox(
             ll: Vector(x: Decimal.fromInt(7), y: Decimal.fromInt(7)),
             ur: Vector(x: Decimal.fromInt(8), y: Decimal.fromInt(8)),
           );
@@ -194,7 +194,7 @@ void main() {
         });
 
         test('left', () {
-          final b2 = Bbox(
+          final b2 = PolyclipBBox(
             ll: Vector(x: Decimal.fromInt(1), y: Decimal.fromInt(5)),
             ur: Vector(x: Decimal.fromInt(3), y: Decimal.fromInt(8)),
           );
@@ -203,7 +203,7 @@ void main() {
         });
 
         test('down', () {
-          final b2 = Bbox(
+          final b2 = PolyclipBBox(
             ll: Vector(x: Decimal.fromInt(2), y: Decimal.fromInt(2)),
             ur: Vector(x: Decimal.fromInt(3), y: Decimal.fromInt(3)),
           );
@@ -212,7 +212,7 @@ void main() {
         });
 
         test('right', () {
-          final b2 = Bbox(
+          final b2 = PolyclipBBox(
             ll: Vector(x: Decimal.fromInt(12), y: Decimal.fromInt(1)),
             ur: Vector(x: Decimal.fromInt(14), y: Decimal.fromInt(9)),
           );
@@ -223,7 +223,7 @@ void main() {
 
       group('touching - one point', () {
         test('upper right corner of b1', () {
-          final b2 = Bbox(
+          final b2 = PolyclipBBox(
             ll: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(6)),
             ur: Vector(x: Decimal.fromInt(7), y: Decimal.fromInt(8)),
           );
@@ -232,7 +232,7 @@ void main() {
           expect(overlap, isNotNull);
           expectBboxEquals(
             overlap,
-            Bbox(
+            PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(6)),
               ur: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(6)),
             ),
@@ -240,7 +240,7 @@ void main() {
         });
 
         test('upper left corner of b1', () {
-          final b2 = Bbox(
+          final b2 = PolyclipBBox(
             ll: Vector(x: Decimal.fromInt(3), y: Decimal.fromInt(6)),
             ur: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(8)),
           );
@@ -249,7 +249,7 @@ void main() {
           expect(overlap, isNotNull);
           expectBboxEquals(
             overlap,
-            Bbox(
+            PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(6)),
               ur: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(6)),
             ),
@@ -257,7 +257,7 @@ void main() {
         });
 
         test('lower left corner of b1', () {
-          final b2 = Bbox(
+          final b2 = PolyclipBBox(
             ll: Vector(x: Decimal.fromInt(0), y: Decimal.fromInt(0)),
             ur: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(4)),
           );
@@ -266,7 +266,7 @@ void main() {
           expect(overlap, isNotNull);
           expectBboxEquals(
             overlap,
-            Bbox(
+            PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(4)),
               ur: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(4)),
             ),
@@ -274,7 +274,7 @@ void main() {
         });
 
         test('lower right corner of b1', () {
-          final b2 = Bbox(
+          final b2 = PolyclipBBox(
             ll: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(0)),
             ur: Vector(x: Decimal.fromInt(12), y: Decimal.fromInt(4)),
           );
@@ -283,7 +283,7 @@ void main() {
           expect(overlap, isNotNull);
           expectBboxEquals(
             overlap,
-            Bbox(
+            PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(4)),
               ur: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(4)),
             ),
@@ -303,7 +303,7 @@ void main() {
           });
 
           test('one side & two corners matching', () {
-            final b2 = Bbox(
+            final b2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(4)),
               ur: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(6)),
             );
@@ -312,7 +312,7 @@ void main() {
           });
 
           test('one corner matching, part of two sides', () {
-            final b2 = Bbox(
+            final b2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(4)),
               ur: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(5)),
             );
@@ -321,7 +321,7 @@ void main() {
           });
 
           test('part of a side matching, no corners', () {
-            final b2 = Bbox(
+            final b2 = PolyclipBBox(
               ll: Vector(x: Decimal.parse('4.5'), y: Decimal.parse('4.5')),
               ur: Vector(x: Decimal.parse('5.5'), y: Decimal.fromInt(6)),
             );
@@ -330,7 +330,7 @@ void main() {
           });
 
           test('completely enclosed - no side or corner matching', () {
-            final b2 = Bbox(
+            final b2 = PolyclipBBox(
               ll: Vector(x: Decimal.parse('4.5'), y: Decimal.fromInt(5)),
               ur: Vector(x: Decimal.parse('5.5'), y: Decimal.parse('5.5')),
             );
@@ -341,14 +341,14 @@ void main() {
 
         group('partial overlap', () {
           test('full side overlap', () {
-            final b2 = Bbox(
+            final b2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(3), y: Decimal.fromInt(4)),
               ur: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(6)),
             );
             final overlap = getBboxOverlap(b1, b2);
             expectBboxEquals(
               overlap,
-              Bbox(
+              PolyclipBBox(
                 ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(4)),
                 ur: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(6)),
               ),
@@ -356,14 +356,14 @@ void main() {
           });
 
           test('partial side overlap', () {
-            final b2 = Bbox(
+            final b2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(5), y: Decimal.parse('4.5')),
               ur: Vector(x: Decimal.fromInt(7), y: Decimal.parse('5.5')),
             );
             final overlap = getBboxOverlap(b1, b2);
             expectBboxEquals(
               overlap,
-              Bbox(
+              PolyclipBBox(
                 ll: Vector(x: Decimal.fromInt(5), y: Decimal.parse('4.5')),
                 ur: Vector(x: Decimal.fromInt(6), y: Decimal.parse('5.5')),
               ),
@@ -371,14 +371,14 @@ void main() {
           });
 
           test('corner overlap', () {
-            final b2 = Bbox(
+            final b2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(5)),
               ur: Vector(x: Decimal.fromInt(7), y: Decimal.fromInt(7)),
             );
             final overlap = getBboxOverlap(b1, b2);
             expectBboxEquals(
               overlap,
-              Bbox(
+              PolyclipBBox(
                 ll: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(5)),
                 ur: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(6)),
               ),
@@ -390,7 +390,7 @@ void main() {
       group('line bboxes', () {
         group('vertical line & normal', () {
           test('no overlap', () {
-            final b2 = Bbox(
+            final b2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(7), y: Decimal.fromInt(3)),
               ur: Vector(x: Decimal.fromInt(7), y: Decimal.fromInt(6)),
             );
@@ -399,7 +399,7 @@ void main() {
           });
 
           test('point overlap', () {
-            final b2 = Bbox(
+            final b2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(0)),
               ur: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(4)),
             );
@@ -408,7 +408,7 @@ void main() {
             expect(overlap, isNotNull);
             expectBboxEquals(
               overlap,
-              Bbox(
+              PolyclipBBox(
                 ll: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(4)),
                 ur: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(4)),
               ),
@@ -416,7 +416,7 @@ void main() {
           });
 
           test('line overlap', () {
-            final b2 = Bbox(
+            final b2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(0)),
               ur: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(9)),
             );
@@ -425,7 +425,7 @@ void main() {
             expect(overlap, isNotNull);
             expectBboxEquals(
               overlap,
-              Bbox(
+              PolyclipBBox(
                 ll: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(4)),
                 ur: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(6)),
               ),
@@ -435,7 +435,7 @@ void main() {
 
         group('horizontal line & normal', () {
           test('no overlap', () {
-            final b2 = Bbox(
+            final b2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(3), y: Decimal.fromInt(7)),
               ur: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(7)),
             );
@@ -444,7 +444,7 @@ void main() {
           });
 
           test('point overlap', () {
-            final b2 = Bbox(
+            final b2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(1), y: Decimal.fromInt(6)),
               ur: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(6)),
             );
@@ -453,7 +453,7 @@ void main() {
             expect(overlap, isNotNull);
             expectBboxEquals(
               overlap,
-              Bbox(
+              PolyclipBBox(
                 ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(6)),
                 ur: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(6)),
               ),
@@ -461,7 +461,7 @@ void main() {
           });
 
           test('line overlap', () {
-            final b2 = Bbox(
+            final b2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(6)),
               ur: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(6)),
             );
@@ -472,13 +472,13 @@ void main() {
         });
 
         group('two vertical lines', () {
-          final v1 = Bbox(
+          final v1 = PolyclipBBox(
             ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(4)),
             ur: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(6)),
           );
 
           test('no overlap', () {
-            final v2 = Bbox(
+            final v2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(7)),
               ur: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(8)),
             );
@@ -487,7 +487,7 @@ void main() {
           });
 
           test('point overlap', () {
-            final v2 = Bbox(
+            final v2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(3)),
               ur: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(4)),
             );
@@ -496,7 +496,7 @@ void main() {
             expect(overlap, isNotNull);
             expectBboxEquals(
               overlap,
-              Bbox(
+              PolyclipBBox(
                 ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(4)),
                 ur: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(4)),
               ),
@@ -504,7 +504,7 @@ void main() {
           });
 
           test('line overlap', () {
-            final v2 = Bbox(
+            final v2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(3)),
               ur: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(5)),
             );
@@ -513,7 +513,7 @@ void main() {
             expect(overlap, isNotNull);
             expectBboxEquals(
               overlap,
-              Bbox(
+              PolyclipBBox(
                 ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(4)),
                 ur: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(5)),
               ),
@@ -522,13 +522,13 @@ void main() {
         });
 
         group('two horizontal lines', () {
-          final h1 = Bbox(
+          final h1 = PolyclipBBox(
             ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(6)),
             ur: Vector(x: Decimal.fromInt(7), y: Decimal.fromInt(6)),
           );
 
           test('no overlap', () {
-            final h2 = Bbox(
+            final h2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(5)),
               ur: Vector(x: Decimal.fromInt(7), y: Decimal.fromInt(5)),
             );
@@ -537,7 +537,7 @@ void main() {
           });
 
           test('point overlap', () {
-            final h2 = Bbox(
+            final h2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(7), y: Decimal.fromInt(6)),
               ur: Vector(x: Decimal.fromInt(8), y: Decimal.fromInt(6)),
             );
@@ -546,7 +546,7 @@ void main() {
             expect(overlap, isNotNull);
             expectBboxEquals(
               overlap,
-              Bbox(
+              PolyclipBBox(
                 ll: Vector(x: Decimal.fromInt(7), y: Decimal.fromInt(6)),
                 ur: Vector(x: Decimal.fromInt(7), y: Decimal.fromInt(6)),
               ),
@@ -554,7 +554,7 @@ void main() {
           });
 
           test('line overlap', () {
-            final h2 = Bbox(
+            final h2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(6)),
               ur: Vector(x: Decimal.fromInt(7), y: Decimal.fromInt(6)),
             );
@@ -566,11 +566,11 @@ void main() {
 
         group('horizontal and vertical lines', () {
           test('no overlap', () {
-            final h1 = Bbox(
+            final h1 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(6)),
               ur: Vector(x: Decimal.fromInt(8), y: Decimal.fromInt(6)),
             );
-            final v1 = Bbox(
+            final v1 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(7)),
               ur: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(9)),
             );
@@ -579,11 +579,11 @@ void main() {
           });
 
           test('point overlap', () {
-            final h1 = Bbox(
+            final h1 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(6)),
               ur: Vector(x: Decimal.fromInt(8), y: Decimal.fromInt(6)),
             );
-            final v1 = Bbox(
+            final v1 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(5)),
               ur: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(9)),
             );
@@ -592,7 +592,7 @@ void main() {
             expect(overlap, isNotNull);
             expectBboxEquals(
               overlap,
-              Bbox(
+              PolyclipBBox(
                 ll: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(6)),
                 ur: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(6)),
               ),
@@ -602,7 +602,7 @@ void main() {
 
         group('produced line box', () {
           test('horizontal', () {
-            final b2 = Bbox(
+            final b2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(6)),
               ur: Vector(x: Decimal.fromInt(8), y: Decimal.fromInt(8)),
             );
@@ -610,7 +610,7 @@ void main() {
 
             expectBboxEquals(
               overlap,
-              Bbox(
+              PolyclipBBox(
                 ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(6)),
                 ur: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(6)),
               ),
@@ -618,7 +618,7 @@ void main() {
           });
 
           test('vertical', () {
-            final b2 = Bbox(
+            final b2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(2)),
               ur: Vector(x: Decimal.fromInt(8), y: Decimal.fromInt(8)),
             );
@@ -626,7 +626,7 @@ void main() {
 
             expectBboxEquals(
               overlap,
-              Bbox(
+              PolyclipBBox(
                 ll: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(4)),
                 ur: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(6)),
               ),
@@ -638,7 +638,7 @@ void main() {
       group('point bboxes', () {
         group('point & normal', () {
           test('no overlap', () {
-            final p = Bbox(
+            final p = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(2), y: Decimal.fromInt(2)),
               ur: Vector(x: Decimal.fromInt(2), y: Decimal.fromInt(2)),
             );
@@ -647,7 +647,7 @@ void main() {
           });
 
           test('point overlap', () {
-            final p = Bbox(
+            final p = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(5)),
               ur: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(5)),
             );
@@ -658,11 +658,11 @@ void main() {
 
         group('point & line', () {
           test('no overlap', () {
-            final p = Bbox(
+            final p = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(2), y: Decimal.fromInt(2)),
               ur: Vector(x: Decimal.fromInt(2), y: Decimal.fromInt(2)),
             );
-            final l = Bbox(
+            final l = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(6)),
               ur: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(8)),
             );
@@ -671,11 +671,11 @@ void main() {
           });
 
           test('point overlap', () {
-            final p = Bbox(
+            final p = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(5)),
               ur: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(5)),
             );
-            final l = Bbox(
+            final l = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(5)),
               ur: Vector(x: Decimal.fromInt(6), y: Decimal.fromInt(5)),
             );
@@ -686,11 +686,11 @@ void main() {
 
         group('point & point', () {
           test('no overlap', () {
-            final p1 = Bbox(
+            final p1 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(2), y: Decimal.fromInt(2)),
               ur: Vector(x: Decimal.fromInt(2), y: Decimal.fromInt(2)),
             );
-            final p2 = Bbox(
+            final p2 = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(6)),
               ur: Vector(x: Decimal.fromInt(4), y: Decimal.fromInt(6)),
             );
@@ -699,7 +699,7 @@ void main() {
           });
 
           test('point overlap', () {
-            final p = Bbox(
+            final p = PolyclipBBox(
               ll: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(5)),
               ur: Vector(x: Decimal.fromInt(5), y: Decimal.fromInt(5)),
             );
