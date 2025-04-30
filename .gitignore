@@ -1,0 +1,18 @@
+# Dart-specific files
+.dart_tool/
+.packages
+.pub/
+build/
+
+# IDE-specific files
+.idea/
+.vscode/
+*.iml
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Other
+*.log
+*.lock
