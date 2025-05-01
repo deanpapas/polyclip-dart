@@ -1,6 +1,6 @@
 import 'polyclipbbox.dart';
-import 'geom-in.dart';
-import 'geom-out.dart';
+import 'geom_in.dart';
+import 'geom_out.dart';
 import 'operation.dart';
 import 'precision.dart';
 import 'sweep_event.dart';

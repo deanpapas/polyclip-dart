@@ -1,8 +1,8 @@
-import 'geom-in.dart';
+import 'geom_in.dart';
 import 'precision.dart';
 import 'operation.dart';
 
-export 'geom-in.dart';
+export 'geom_in.dart';
 
 Geom union(Geom geom, List<Geom> moreGeoms) =>
     operation.run('union', geom, moreGeoms) as Geom;

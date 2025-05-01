@@ -1,7 +1,7 @@
 import 'dart:collection';
 import 'polyclipbbox.dart';
-import 'geom-in.dart';
-import 'geom-out.dart';
+import 'geom_in.dart';
+import 'geom_out.dart';
 import 'precision.dart';
 import 'sweep_event.dart';
 import 'sweep_line.dart';

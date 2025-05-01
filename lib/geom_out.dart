@@ -1,4 +1,4 @@
-import 'geom-in.dart';
+import 'geom_in.dart';
 import 'precision.dart';
 import 'segment.dart';
 import 'sweep_event.dart';
