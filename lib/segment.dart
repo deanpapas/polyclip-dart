@@ -1,6 +1,6 @@
-import 'bbox.dart';
-import 'geom_in.dart';
-import 'geom_out.dart';
+import 'polyclipbbox.dart';
+import 'geom-in.dart';
+import 'geom-out.dart';
 import 'operation.dart';
 import 'precision.dart';
 import 'sweep_event.dart';
@@ -66,8 +66,8 @@ class Segment {
         final brx = b.rightSE.point.x;
 
         // check if they're even in the same vertical plane
-        if (brx.isLessThan(alx)) return 1;
-        if (arx.isLessThan(blx)) return -1;
+        if (brx.compareTo(alx) < 0) return 1;
+        if (arx.compareTo(blx) < 0) return -1;
 
         final aly = a.leftSE.point.y;
         final bly = b.leftSE.point.y;
@@ -75,10 +75,10 @@ class Segment {
         final bry = b.rightSE.point.y;
 
         // is left endpoint of segment B the right-more?
-        if (alx.isLessThan(blx)) {
+        if (alx < blx) {
             // are the two segments in the same horizontal plane?
-            if (bly.isLessThan(aly) && bly.isLessThan(ary)) return 1;
-            if (bly.isGreaterThan(aly) && bly.isGreaterThan(ary)) return -1;
+            if (bly.compareTo(aly) < 0 && bly.compareTo(ary) < 0) return 1;
+            if (bly > aly && bly > ary) return -1;
 
             // is the B left endpoint colinear to segment A?
             final aCmpBLeft = a.comparePoint(b.leftSE.point);
@@ -95,9 +95,9 @@ class Segment {
         }
 
         // is left endpoint of segment A the right-more?
-        if (alx.isGreaterThan(blx)) {
-            if (aly.isLessThan(bly) && aly.isLessThan(bry)) return -1;
-            if (aly.isGreaterThan(bly) && aly.isGreaterThan(bry)) return 1;
+        if (alx > blx) {
+            if (aly.compareTo(bly) < 0 && aly.compareTo(bry) < 0) return -1;
+            if (aly > bly && aly > bry) return 1;
 
             // is the A left endpoint colinear to segment B?
             final bCmpALeft = b.comparePoint(a.leftSE.point);
@@ -117,47 +117,47 @@ class Segment {
         // vertical plane, ie alx === blx
 
         // consider the lower left-endpoint to come first
-        if (aly.isLessThan(bly)) return -1;
-        if (aly.isGreaterThan(bly)) return 1;
+        if (aly < bly) return -1;
+        if (aly > bly) return 1;
 
         // left endpoints are identical
         // check for colinearity by using the left-more right endpoint
 
         // is the A right endpoint more left-more?
-        if (arx.isLessThan(brx)) {
+        if (arx.compareTo(brx) < 0) {
             final bCmpARight = b.comparePoint(a.rightSE.point);
             if (bCmpARight != 0) return bCmpARight;
         }
 
         // is the B right endpoint more left-more?
-        if (arx.isGreaterThan(brx)) {
+        if (arx > brx) {
             final aCmpBRight = a.comparePoint(b.rightSE.point);
             if (aCmpBRight < 0) return 1;
             if (aCmpBRight > 0) return -1;
         }
 
-        if (!arx.eq(brx)) {
+        if (arx != brx) {
             // are these two [almost] vertical segments with opposite orientation?
             // if so, the one with the lower right endpoint comes first
-            final ay = ary.minus(aly);
-            final ax = arx.minus(alx);
-            final by = bry.minus(bly);
-            final bx = brx.minus(blx);
-            if (ay.isGreaterThan(ax) && by.isLessThan(bx)) return 1;
-            if (ay.isLessThan(ax) && by.isGreaterThan(bx)) return -1;
+            final ay = ary - aly;
+            final ax = arx - alx;
+            final by = bry - bly;
+            final bx = brx - blx;
+            if (ay > ax && by < bx) return 1;
+            if (ay < ax && by > bx) return -1;
         }
 
         // we have colinear segments with matching orientation
         // consider the one with more left-more right endpoint to be first
-        if (arx.isGreaterThan(brx)) return 1;
-        if (arx.isLessThan(brx)) return -1;
+        if (arx > brx) return 1;
+        if (arx.compareTo(brx) < 0) return -1;
 
         // if we get here, two two right endpoints are in the same
         // vertical plane, ie arx === brx
 
         // consider the lower right-endpoint to come first
-        if (ary.isLessThan(bry)) return -1;
-        if (ary.isGreaterThan(bry)) return 1;
+        if (ary.compareTo(bry) < 0) return -1;
+        if (ary > bry) return 1;
 
         // right endpoints identical as well, so the segments are identical
         // fall back on creation order as consistent tie-breaker
@@ -212,26 +212,26 @@ class Segment {
         leftSE.otherSE = rightSE;
     }
 
-    Map<String, dynamic> bbox() {
+    PolyclipBBox bbox() {
         final y1 = leftSE.point.y;
         final y2 = rightSE.point.y;
-        return {
-            'll': {'x': leftSE.point.x, 'y': y1.isLessThan(y2) ? y1 : y2},
-            'ur': {'x': rightSE.point.x, 'y': y1.isGreaterThan(y2) ? y1 : y2},
-        };
+        return PolyclipBBox(
+            ll: Point(x: leftSE.point.x, y: y1.compareTo(y2) < 0 ? y1 : y2),
+            ur: Point(x: rightSE.point.x, y: y1 > y2 ? y1 : y2),
+        );
     }
 
     /* A vector from the left point to the right */
-    Map<String, dynamic> vector() {
-        return {
-            'x': rightSE.point.x.minus(leftSE.point.x),
-            'y': rightSE.point.y.minus(leftSE.point.y),
-        };
+    Vector vector() {
+        return Vector(
+            x: rightSE.point.x - leftSE.point.x,
+            y: rightSE.point.y - leftSE.point.y,
+        );
     }
 
     bool isAnEndpoint(Point pt) {
-        return (pt.x.eq(leftSE.point.x) && pt.y.eq(leftSE.point.y)) ||
-            (pt.x.eq(rightSE.point.x) && pt.y.eq(rightSE.point.y));
+        return (pt.x == leftSE.point.x && pt.y == leftSE.point.y) ||
+            (pt.x == rightSE.point.x && pt.y == rightSE.point.y);
     }
 
     /* Compare this segment with a point.
@@ -305,7 +305,7 @@ class Segment {
         if (touchesThisLSE) {
             // check for segments that just intersect on opposing endpoints
             if (touchesOtherRSE) {
-            if (tlp.x.eq(orp.x) && tlp.y.eq(orp.y)) return null;
+            if (tlp.x == orp.x && tlp.y == orp.y) return null;
         }
         // t-intersection on left endpoint
         return tlp;
@@ -315,7 +315,7 @@ class Segment {
         if (touchesOtherLSE) {
             // check for segments that just intersect on opposing endpoints
             if (touchesThisRSE) {
-                if (trp.x.eq(olp.x) && trp.y.eq(olp.y)) return null;
+                if (trp.x == olp.x && trp.y == olp.y) return null;
             }
         // t-intersection on left endpoint
         return olp;
@@ -357,7 +357,7 @@ class Segment {
    */
     List<SweepEvent> split(Point point) {
         final newEvents = <SweepEvent>[];
-        final alreadyLinked = point.events != null;
+        final alreadyLinked = true;
 
         final newLeftSE = SweepEvent(point, true);
         final newRightSE = SweepEvent(point, false);

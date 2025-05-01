@@ -1,4 +1,4 @@
-import 'geom_in.dart';
+import 'geom-in.dart';
 import 'precision.dart';
 import 'segment.dart';
 import 'sweep_event.dart';
@@ -208,7 +208,7 @@ class PolyOut {
             if (ringGeom == null) continue;
             geom.add(ringGeom);
         }
-        return geom;
+        return Poly(geom);
     }
 }
 
@@ -228,7 +228,7 @@ class MultiPolyOut {
             if (polyGeom == null) continue;
             geom.add(polyGeom);
         }
-        return geom;
+        return MultiPoly(geom);
     }
 
     List<PolyOut> _composePolys(List<RingOut> rings) {
