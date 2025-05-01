@@ -16,7 +16,7 @@ typedef Snap = Vector Function(Vector v);
 Snap snap({double? eps}) {
   if (eps != null) {
     // Cast the comparison function to the correct type
-    final comparer = compareWithEpsilon(eps);
+    final comparer = compareWithDecimalEpsilon(Decimal.parse(eps.toString()));
     final xTree = SplayTreeSet<Decimal>(comparer);
     final yTree = SplayTreeSet<Decimal>(comparer);
     
