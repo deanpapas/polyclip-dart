@@ -34,18 +34,14 @@ PrecisionConfig precision = createPrecisionConfig();
 
 /// THIS is what you must call to reset the global `precision` instance
 void setPrecision([double? eps]) {
-  print('[setPrecision] replacing global precision with eps: $eps');
   precision = createPrecisionConfig(eps);
 }
 
 /// Uses compareWithDecimalEpsilon to avoid `eps = 0` bugs
 PrecisionConfig createPrecisionConfig([double? eps]) {
-  print('[createPrecisionConfig] eps received: $eps');
   final Decimal decimalEps = eps != null
       ? Decimal.parse('1e-20') // Hardcoded to avoid float drift
       : Decimal.zero;
-
-  print('[createPrecisionConfig] using decimal epsilon: $decimalEps');
 
   final compareFunc = compareWithDecimalEpsilon(decimalEps);
   final snapFunc = snap(eps: eps);
