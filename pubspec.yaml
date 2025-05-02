@@ -10,6 +10,7 @@ dependencies:
   decimal: ^2.0.1
   geotypes: ^0.0.2
   collection: ^1.17.0
+  turf: ^0.0.10
 
 dev_dependencies:
   test: ^1.24.3

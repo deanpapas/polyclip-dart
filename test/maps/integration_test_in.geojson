@@ -1,0 +1,42 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [ -2, -2 ],
+              [ 2, -2 ],
+              [ 2, 2 ],
+              [ -2, 2 ],
+              [ -2, -2 ]
+            ]
+          ]
+        },
+        "properties": {
+          "name": "Square Bounding Box 1"
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [ 0, 0 ],
+              [ 4, 0 ],
+              [ 4, 4 ],
+              [ 0, 4 ],
+              [ 0, 0 ]
+            ]
+          ]
+        },
+        "properties": {
+          "name": "Square Bounding Box 2"
+        }
+      }
+    ]
+  }
+  
