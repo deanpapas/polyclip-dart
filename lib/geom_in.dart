@@ -130,8 +130,8 @@ class MultiPolyIn {
   final bool isSubject;
   final List<PolyIn> polys = [];
   final PolyclipBBox bbox = PolyclipBBox(
-    ll: Point(x: Decimal.parse(double.infinity.toString()), y: Decimal.parse(double.infinity.toString())),
-    ur: Point(x: Decimal.parse(double.negativeInfinity.toString()), y: Decimal.parse(double.negativeInfinity.toString())),
+    ll: Point(x: Decimal.fromInt(-999999999), y: Decimal.fromInt(-999999999)),
+    ur: Point(x: Decimal.fromInt(999999999), y: Decimal.fromInt(999999999)),
   );
 
   MultiPolyIn(Geom geom, this.isSubject) {

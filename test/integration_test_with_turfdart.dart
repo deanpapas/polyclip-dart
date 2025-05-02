@@ -1,42 +1,43 @@
-import 'package:turf/turf.dart' as turf;
-import 'package:test/test.dart';
+import 'package:decimal/decimal.dart';
+import 'package:polyclip_dart/geom_in.dart';
+import 'package:polyclip_dart/geom_out.dart';
+import 'package:polyclip_dart/segment.dart'; //might need to change imports
 
 void main() {
-  group('Create intersecting squares', () {
-    test('should create two intersecting square bounding boxes', () {
-      // Define the bounding boxes of the two squares
-      final turf.BBox bbox1 = turf.BBox.named(
-        lng1: -2,
-        lat1: -2,
-        lng2: 2,
-        lat2: 2,
-      );
-      final turf.BBox bbox2 = turf.BBox.named(
-        lng1: 0,
-        lat1: 0,
-        lng2: 4,
-        lat2: 4,
-      );
+  // Define polygons using Decimal for high precision
+   final Ring polygon1 = [
+    [Decimal.fromInt(0).toDouble(), Decimal.fromInt(0).toDouble()],
+    [Decimal.fromInt(0).toDouble(), Decimal.fromInt(10).toDouble()],
+    [Decimal.fromInt(10).toDouble(), Decimal.fromInt(10).toDouble()],
+    [Decimal.fromInt(10).toDouble(), Decimal.fromInt(0).toDouble()],
+    [Decimal.fromInt(0).toDouble(), Decimal.fromInt(0).toDouble()], // Close the ring
+  ];
 
-      // Create square polygons from the bounding boxes using turf.bboxPolygon
-      final turf.Polygon square1 = turf.bboxPolygon(bbox1).geometry!;
-      final turf.Polygon square2 = turf.bboxPolygon(bbox2).geometry!;
+  final Ring polygon2 = [
+    [Decimal.fromInt(2).toDouble(), Decimal.fromInt(2).toDouble()],
+    [Decimal.fromInt(2).toDouble(), Decimal.fromInt(8).toDouble()],
+    [Decimal.fromInt(8).toDouble(), Decimal.fromInt(8).toDouble()],
+    [Decimal.fromInt(8).toDouble(), Decimal.fromInt(2).toDouble()],
+    [Decimal.fromInt(2).toDouble(), Decimal.fromInt(2).toDouble()], // Close the ring
+  ];
+  // Wrap polygons in PolyIn
+  final polyIn1 = PolyIn(Poly([polygon1]), MultiPolyIn(Poly([polygon1]), true));
+  final polyIn2 = PolyIn(Poly([polygon2]), MultiPolyIn(Poly([polygon2]), false));
 
-      // Verify that the polygons are created.
-      expect(square1, isA<turf.Polygon>());
-      expect(square2, isA<turf.Polygon>());
+  // Combine all sweep events
+  final allSegments = <Segment>[];
+  allSegments.addAll(polyIn1.getSweepEvents().map((e) => e.segment));
+  allSegments.addAll(polyIn2.getSweepEvents().map((e) => e.segment));
 
-      // Verify that the squares intersect using bounding box intersection check
-      bool intersects = _checkBoxIntersection(bbox1, bbox2);
-      expect(intersects, true, reason: 'Squares should intersect');
-    });
-  });
-}
+  // Perform the intersection
+  final intersectedRings = RingOut.factory(allSegments);
 
-// Helper function to check if two bounding boxes intersect
-bool _checkBoxIntersection(turf.BBox bbox1, turf.BBox bbox2) {
-  return !(bbox2.lng1 > bbox1.lng2 ||
-           bbox2.lng2 < bbox1.lng1 ||
-           bbox2.lat1 > bbox1.lat2 ||
-           bbox2.lat2 < bbox1.lat1);
+  // Print the results
+  if (intersectedRings.isNotEmpty) {
+    for (final ring in intersectedRings) {
+      print('Intersected Ring: ${ring.getGeom()}');
+    }
+  } else {
+    print('No intersection found');
+  }
 }
