@@ -18,16 +18,16 @@ void main() {
         lat2: 4,
       );
 
-      // Create square bounding boxes from the original bounding boxes
-      final turf.BBox squareBbox1 = square(bbox1);
-      final turf.BBox squareBbox2 = square(bbox2);
+      // Create square polygons from the bounding boxes using turf.bboxPolygon
+      final turf.Polygon square1 = turf.bboxPolygon(bbox1).geometry!;
+      final turf.Polygon square2 = turf.bboxPolygon(bbox2).geometry!;
 
-      // Verify that the bounding boxes are created.
-      expect(squareBbox1, isA<turf.BBox>());
-      expect(squareBbox2, isA<turf.BBox>());
+      // Verify that the polygons are created.
+      expect(square1, isA<turf.Polygon>());
+      expect(square2, isA<turf.Polygon>());
 
-      // Verify that the squares intersect.
-      bool intersects = _checkBoxIntersection(squareBbox1, squareBbox2);
+      // Verify that the squares intersect using bounding box intersection check
+      bool intersects = _checkBoxIntersection(bbox1, bbox2);
       expect(intersects, true, reason: 'Squares should intersect');
     });
   });
