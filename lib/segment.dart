@@ -596,4 +596,8 @@ class Segment {
 
     return _isInResult!;
   }
+
+  void setInResult(bool value) {
+    _isInResult = value;
+  }
 }

@@ -1,6 +1,7 @@
 import 'compare.dart';
 import 'orient.dart';
 import 'snap.dart';
+import 'sweep_event.dart';
 import 'package:decimal/decimal.dart';
 
 /// Configuration object that holds precision-related functions for geometric operations.
@@ -27,6 +28,11 @@ class PrecisionConfig {
     required this.reset,
     required this.set,
   });
+
+  /// Returns true if two points are considered the same within the configured precision.
+  bool pointsSame(Point a, Point b) {
+    return compare(a.x, b.x) == 0 && compare(a.y, b.y) == 0;
+  }
 }
 
 // ⚠ Global reference — needs to be updated explicitly
