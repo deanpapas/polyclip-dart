@@ -9,6 +9,7 @@ export 'orient.dart';
 export 'precision.dart';
 export 'segment.dart';
 export 'sweep_event.dart';
+export 'sweep_line.dart';
 export 'operation.dart';
 export 'geom_in.dart';
 export 'geom_out.dart';

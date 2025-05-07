@@ -43,12 +43,12 @@ class SweepLine {
 
         // skip consumed segments still in tree
         do {
-            prevSeg = _findLastBefore(tree, prevSeg);
+            prevSeg = findLastBefore(tree, prevSeg);
         } while (prevSeg != null && prevSeg.consumedBy != null);
 
         // skip consumed segments still in tree
         do {
-            nextSeg = _findFirstAfter(tree, nextSeg);
+            nextSeg = findFirstAfter(tree, nextSeg);
         } while (nextSeg != null && nextSeg.consumedBy != null);
 
         if (event.isLeft) {
@@ -154,7 +154,7 @@ class SweepLine {
     }
 
     // Helper method to find the last element before the given element
-    Segment? _findLastBefore(SplayTreeSet<Segment> tree, Segment? segment) {
+    Segment? findLastBefore(SplayTreeSet<Segment> tree, Segment? segment) {
         if (segment == null) return null;
         final iterator = tree.toList().reversed.iterator;
         Segment? result;
@@ -171,7 +171,7 @@ class SweepLine {
     }
 
     // Helper method to find the first element after the given element
-    Segment? _findFirstAfter(SplayTreeSet<Segment> tree, Segment? segment) {
+    Segment? findFirstAfter(SplayTreeSet<Segment> tree, Segment? segment) {
         if (segment == null) return null;
         final iterator = tree.iterator;
         Segment? result;
