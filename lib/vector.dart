@@ -7,6 +7,13 @@ class Vector {
   final Decimal y;
 
   const Vector({required this.x, required this.y});
+
+  @override
+  bool operator ==(Object other) =>
+      other is Vector && x == other.x && y == other.y;
+
+  @override
+  int get hashCode => Object.hash(x, y);
 }
 
 /// Approximates the square root of a Decimal value by converting to double.
@@ -45,7 +52,7 @@ Decimal sineOfAngle(Vector pShared, Vector pBase, Vector pAngle) {
     x: Decimal.parse((pAngle.x - pShared.x).toString()),
     y: Decimal.parse((pAngle.y - pShared.y).toString()),
   );
-  
+
   final crossProd = crossProduct(vAngle, vBase);
   final lenAngle = length(vAngle);
   final lenBase = length(vBase);
@@ -65,12 +72,12 @@ Decimal cosineOfAngle(Vector pShared, Vector pBase, Vector pAngle) {
     x: Decimal.parse((pAngle.x - pShared.x).toString()),
     y: Decimal.parse((pAngle.y - pShared.y).toString()),
   );
-  
+
   final dotProd = dotProduct(vAngle, vBase);
   final lenAngle = length(vAngle);
   final lenBase = length(vBase);
   final denominator = lenAngle * lenBase;
-  
+
   final result = dotProd.toDouble() / denominator.toDouble();
   return Decimal.parse(result.toString());
 }
@@ -91,25 +98,24 @@ Vector? horizontalIntersection(Vector pt, Vector v, Decimal y) {
 /// crosses a vertical line with the given x coordinate.
 /// Returns null if the line is parallel to the vertical line.
 Vector? verticalIntersection(Vector pt, Vector v, Decimal x) {
- if (v.x == Decimal.zero) return null;
- final ratio = Decimal.parse((v.y / v.x).toString());
- final xDiff = Decimal.parse((x - pt.x).toString());
- final yOffset = Decimal.parse((ratio * xDiff).toString());
- final y = pt.y + yOffset;
- return Vector(x: x, y: y);
+  if (v.x == Decimal.zero) return null;
+  final ratio = Decimal.parse((v.y / v.x).toString());
+  final xDiff = Decimal.parse((x - pt.x).toString());
+  final yOffset = Decimal.parse((ratio * xDiff).toString());
+  final y = pt.y + yOffset;
+  return Vector(x: x, y: y);
 }
 
 /// Given two lines, each defined by a base point and a vector, returns the intersection point.
 /// For vertical and horizontal lines, shortcuts are used and if the lines are parallel, null is returned.
 Vector? intersection(Vector pt1, Vector v1, Vector pt2, Vector v2) {
- if (v1.x == Decimal.zero) return verticalIntersection(pt2, v2, pt1.x);
- if (v2.x == Decimal.zero) return verticalIntersection(pt1, v1, pt2.x);
- if (v1.y == Decimal.zero) return horizontalIntersection(pt2, v2, pt1.y);
- if (v2.y == Decimal.zero) return horizontalIntersection(pt1, v1, pt2.y);
+  if (v1.x == Decimal.zero) return verticalIntersection(pt2, v2, pt1.x);
+  if (v2.x == Decimal.zero) return verticalIntersection(pt1, v1, pt2.x);
+  if (v1.y == Decimal.zero) return horizontalIntersection(pt2, v2, pt1.y);
+  if (v2.y == Decimal.zero) return horizontalIntersection(pt1, v1, pt2.y);
 
-
- final kross = crossProduct(v1, v2);
- if (kross == Decimal.zero) return null;
+  final kross = crossProduct(v1, v2);
+  if (kross == Decimal.zero) return null;
 
   // Vector from pt1 to pt2
   final ve = Vector(
@@ -119,7 +125,7 @@ Vector? intersection(Vector pt1, Vector v1, Vector pt2, Vector v2) {
 
   final crossVEv1R = Decimal.parse(crossProduct(ve, v1).toString());
   final crossVEv2R = Decimal.parse(crossProduct(ve, v2).toString());
-  final krossR      = Decimal.parse(kross.toString());
+  final krossR = Decimal.parse(kross.toString());
 
   // d1 and d2, specify how many digits of precision you want to keep
   const int scale = 28; // or however many you need
