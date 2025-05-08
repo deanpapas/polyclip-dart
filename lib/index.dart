@@ -4,17 +4,19 @@ import 'operation.dart';
 
 export 'geom_in.dart';
 
-Geom union(Geom geom, List<Geom> moreGeoms) =>
-    operation.run('union', geom, moreGeoms) as Geom;
+import 'package:geotypes/geotypes.dart';
 
-Geom intersection(Geom geom, List<Geom> moreGeoms) =>
-    operation.run('intersection', geom, moreGeoms) as Geom;
+Polygon union(Polygon geom, List<Polygon> moreGeoms) =>
+    operation.run('union', geom, moreGeoms) as Polygon;
 
-Geom xor(Geom geom, List<Geom> moreGeoms) =>
-    operation.run('xor', geom, moreGeoms) as Geom;
+Polygon intersection(Polygon geom, List<Polygon> moreGeoms) =>
+    operation.run('intersection', geom, moreGeoms) as Polygon;
 
-Geom difference(Geom geom, List<Geom> moreGeoms) =>
-    operation.run('difference', geom, moreGeoms) as Geom;
+Polygon xor(Polygon geom, List<Polygon> moreGeoms) =>
+    operation.run('xor', geom, moreGeoms) as Polygon;
+
+Polygon difference(Polygon geom, List<Polygon> moreGeoms) =>
+    operation.run('difference', geom, moreGeoms) as Polygon;
 
 // Expose the setPrecision function from precision
 final setPrecision = precision.set;
