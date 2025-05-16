@@ -1,4 +1,4 @@
-import 'polyclipbbox.dart';
+import 'bbox.dart';
 import 'geom_in.dart';
 import 'geom_out.dart';
 import 'operation.dart';
@@ -216,10 +216,10 @@ class Segment {
     leftSE.otherSE = rightSE;
   }
 
-  PolyclipBBox bbox() {
+  Bbox bbox() {
     final y1 = leftSE.point.y;
     final y2 = rightSE.point.y;
-    return PolyclipBBox(
+    return Bbox(
       ll: Point(x: leftSE.point.x, y: y1.compareTo(y2) < 0 ? y1 : y2),
       ur: Point(x: rightSE.point.x, y: y1 > y2 ? y1 : y2),
     );

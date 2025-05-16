@@ -46,7 +46,13 @@ class SweepEvent {
   }
 
   void link(SweepEvent other) {
-    if (identical(other.point, this.point)) return;
+    if (this == other) {
+      throw StateError('Cannot link an event to itself');
+    }
+    // or if they share the same point object and shouldn't link
+    if (identical(point, other.point)) {
+      throw StateError('Cannot link events that share the same point instance');
+    }
 
     final otherEvents = other.point.events;
     for (int i = 0, iMax = otherEvents.length; i < iMax; i++) {

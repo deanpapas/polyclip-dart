@@ -38,18 +38,26 @@ class SweepLine {
 
         if (event.isLeft) tree.add(segment);
 
-        Segment? prevSeg = segment;
-        Segment? nextSeg = segment;
+        Segment? prevSeg = findLastBefore(tree, segment);        // Find the previous and next segments, skipping consumed segments
+        while (prevSeg != null) {
+          if (prevSeg.consumedBy == null) break;
+          final candidate = findLastBefore(tree, prevSeg);
+          if (candidate == null || candidate == prevSeg) break;
+          prevSeg = candidate;
+        }
 
-        // skip consumed segments still in tree
-        do {
-            prevSeg = findLastBefore(tree, prevSeg);
-        } while (prevSeg != null && prevSeg.consumedBy != null);
+        Segment? nextSeg = findFirstAfter(tree, segment);
+        while (nextSeg != null) {
+          if (nextSeg.consumedBy == null) break;
+          final candidate = findFirstAfter(tree, nextSeg);
+          if (candidate == null || candidate == nextSeg) break;
+          nextSeg = candidate;
+        }
 
-        // skip consumed segments still in tree
-        do {
-            nextSeg = findFirstAfter(tree, nextSeg);
-        } while (nextSeg != null && nextSeg.consumedBy != null);
+        // Validate that we found valid segments
+        if (prevSeg?.consumedBy != null) prevSeg = null;
+        if (nextSeg?.consumedBy != null) nextSeg = null;
+
 
         if (event.isLeft) {
             // Check for intersections against the previous segment in the sweep line
@@ -78,29 +86,25 @@ class SweepLine {
                 }
             }
 
-            // For simplicity, even if we find more than one intersection we only
-            // spilt on the 'earliest' (sweep-line style) of the intersections.
-            // The other intersection will be handled in a future process().
+        // Handle multiple intersections by sorting them by sweep-line order
             if (prevMySplitter != null || nextMySplitter != null) {
                 Point? mySplitter = null;
-                if (prevMySplitter == null) {
-                    mySplitter = nextMySplitter;
-                } else if (nextMySplitter == null) {
-                    mySplitter = prevMySplitter;
-                } else {
-                    final cmpSplitters = SweepEvent.comparePoints(
-                        prevMySplitter,
-                        nextMySplitter,
-                    );
-                    mySplitter = cmpSplitters <= 0 ? prevMySplitter : nextMySplitter;
-                }
+                final splitters = <Point>[];
+                if (prevMySplitter != null) splitters.add(prevMySplitter);
+                if (nextMySplitter != null) splitters.add(nextMySplitter);
+                
+                // Sort intersection points by sweep-line order
+                splitters.sort(SweepEvent.comparePoints);
+                
+                // Take the leftmost intersection point
+                mySplitter = splitters.first;
 
                 // Rounding errors can cause changes in ordering,
                 // so remove affected segments and right sweep events before splitting
                 queue.remove(segment.rightSE);
                 newEvents.add(segment.rightSE);
 
-                final newEventsFromSplit = segment.split(mySplitter!);
+                final newEventsFromSplit = segment.split(mySplitter);
                 newEvents.addAll(newEventsFromSplit);
             }
 

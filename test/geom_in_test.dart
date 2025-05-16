@@ -1,8 +1,51 @@
 import 'package:test/test.dart';
 import 'package:polyclip_dart/polyclip.dart';
+import 'package:decimal/decimal.dart';
 
 void main() {
   group('RingIn', () {
+    test('create exterior ring', () {
+      final ringGeomIn = [
+        [0.0, 0.0],
+        [1.0, 0.0],
+        [1.0, 1.0]
+      ];
+
+      final expectedPt1 = Vector(x: Decimal.parse('0'), y: Decimal.parse('0'));
+      final expectedPt2 = Vector(x: Decimal.parse('1'), y: Decimal.parse('0'));
+      final expectedPt3 = Vector(x: Decimal.parse('1'), y: Decimal.parse('1'));
+
+      // Minimal dummy MultiPolyIn just to satisfy constructor requirements
+      final dummyMulti = MultiPolyIn(
+        Poly([
+          [
+            [0.0, 0.0],
+            [2.0, 0.0],
+            [2.0, 2.0],
+            [0.0, 2.0],
+            [0.0, 0.0]
+          ]
+        ]),
+        true,
+      );
+
+      final dummyPoly = dummyMulti.polys.first;
+      final ring = RingIn(ringGeomIn, dummyPoly, true);
+      dummyPoly.exteriorRing = ring;
+
+      expect(ring.poly, same(dummyPoly));
+      expect(ring.isExterior, isTrue);
+      expect(ring.segments.length, equals(3));
+      expect(ring.getSweepEvents().length, equals(6));
+
+      expect(ring.segments[0].leftSE.point, equals(expectedPt1));
+      expect(ring.segments[0].rightSE.point, equals(expectedPt2));
+      expect(ring.segments[1].leftSE.point, equals(expectedPt2));
+      expect(ring.segments[1].rightSE.point, equals(expectedPt3));
+      expect(ring.segments[2].leftSE.point, equals(expectedPt1));
+      expect(ring.segments[2].rightSE.point, equals(expectedPt3));
+    });
+
     test('create an interior ring', () {
       final poly = Poly([
         [

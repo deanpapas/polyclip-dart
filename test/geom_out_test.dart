@@ -5,7 +5,7 @@ import 'package:polyclip_dart/polyclip.dart';
 void main() {
   Decimal d(num n) => Decimal.parse(n.toString());
   Point pt(num x, num y) => Point(x: d(x), y: d(y));
-  
+
   RingIn createTestRing() {
     // Create a simple polygon for testing with proper List<double> types
     final ring = <List<double>>[
@@ -17,7 +17,7 @@ void main() {
     final multiPoly = MultiPolyIn(poly, true);
     return multiPoly.polys.first.exteriorRing;
   }
-  
+
   Segment seg(Point p1, Point p2) => Segment.fromRing(p1, p2, createTestRing());
 
   group('RingOut.factory', () {
@@ -342,14 +342,14 @@ void main() {
     final s3 = seg(p3, p1)..setInResult(true);
 
     final ring = RingOut.factory([s1, s2, s3])[0];
-    ring.setExteriorRing(false);
+    ring.setInterior(); // using the extension above
 
     expect(ring.isExteriorRing(), isFalse);
     expect(ring.getGeom(), [
-      [0.0, 1.0],  
-      [1.0, 1.0],  
-      [0.0, 0.0],
-      [0.0, 0.0]
+      [0, 0],
+      [0, 1],
+      [1, 1],
+      [0, 0]
     ]);
   });
 

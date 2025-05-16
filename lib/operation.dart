@@ -1,5 +1,5 @@
 import 'dart:collection';
-import 'polyclipbbox.dart';
+import 'bbox.dart';
 import 'geom_in.dart';
 import 'geom_out.dart';
 import 'precision.dart';

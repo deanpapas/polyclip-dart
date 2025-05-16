@@ -2,13 +2,13 @@ import 'package:decimal/decimal.dart';
 
 typedef CompareDecimals = int Function(Decimal a, Decimal b);
 
-/// Returns a comparison function for Decimal values.
-/// If [eps] is provided, values within [eps] of each other are considered equal.
-CompareDecimals compareWithDecimalEpsilon(Decimal eps) {
+CompareDecimals compareWithDecimalEpsilon([Decimal? eps]) {
+  final bool Function(Decimal a, Decimal b) almostEqual = eps != null
+      ? (a, b) => (b - a).abs() <= eps
+      : (_, __) => false;
+
   return (Decimal a, Decimal b) {
-    final diff = (b - a).abs();
-    final result = diff <= eps;
-    if (result) return 0;
+    if (almostEqual(a, b)) return 0;
     return a.compareTo(b);
   };
 }

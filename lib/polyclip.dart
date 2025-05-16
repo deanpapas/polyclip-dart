@@ -1,7 +1,7 @@
 library polyclip;
 
 export 'vector.dart';
-export 'polyclipbbox.dart';
+export 'bbox.dart';
 export 'compare.dart';
 export 'snap.dart';
 export 'identity.dart';
@@ -13,3 +13,4 @@ export 'sweep_line.dart';
 export 'operation.dart';
 export 'geom_in.dart';
 export 'geom_out.dart';
+

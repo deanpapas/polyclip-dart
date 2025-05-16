@@ -33,6 +33,18 @@ class PrecisionConfig {
   bool pointsSame(Point a, Point b) {
     return compare(a.x, b.x) == 0 && compare(a.y, b.y) == 0;
   }
+
+  /// Returns true if two points are exactly equal
+  bool arePointsEqual(Point a, Point b) {
+    return compare(a.x, b.x) == 0 && compare(a.y, b.y) == 0;
+  }
+
+  /// Returns true if two points are within epsilon distance of each other
+  bool arePointsNearlyEqual(Point a, Point b) {
+    final dx = a.x - b.x;
+    final dy = a.y - b.y;
+    return compare(dx.abs(), Decimal.zero) <= 0 && compare(dy.abs(), Decimal.zero) <= 0;
+  }
 }
 
 // ⚠ Global reference — needs to be updated explicitly
